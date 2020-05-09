@@ -1,5 +1,6 @@
 import os
 import re
+
 import pandas as pd
 
 
@@ -35,13 +36,33 @@ def extract_date(filename):
     return '-'
 
 
-def main():
+def files_summary(files):
+    d = {}
+    for filename in files:
+        df = pd.read_csv(os.getcwd() + '/csvs/' + filename, encoding='latin1')
+        total = len(df)
+        d[filename] = {
+            'total': total
+        }
+
+    return d
+
+
+def clean_data():
     files = os.listdir('./csvs/')
     df = pd.DataFrame.from_dict({'file': files})
     df['city'] = df.file.apply(lambda f: extract_city(f))
     df['date'] = df.file.apply(lambda f: extract_date(f))
+
+    file_summary = files_summary(files)
+
+    df['srl_count'] = df.file
+    new_columns = ['sa_count', 'mono_mides_count', 'unipersonal_count', 'sociedad_de_hecho_count', 'total']
+    for col in new_columns:
+        df[col] = df.file.apply(lambda f: file_summary[f][col])
+
     return df
 
 
 if __name__ == '__main__':
-    df = main()
+    df = clean_data()
