@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 
 
@@ -12,12 +13,10 @@ def extract_city(f):
     return 'Montevideo'
 
 
-def extract_date_from_sufix(filename):
-    months = 'enero,febrero,marzo,abril,mayo,junio,' \
-             'julio,agosto,setiembre,octubre,noviembre,diciembre'.split(',')
-    parts = filename.split('-')
-
-    return None
+def month_from_name(name):
+    month_list = 'enero|febrero|marzo|abril|mayo|junio|julio|agosto|setiembre|octubre|noviembre|diciembre'.split("|")
+    month = month_list.index(name) + 1
+    return f'{month:02}'
 
 
 def extract_date(filename):
@@ -26,11 +25,14 @@ def extract_date(filename):
     if len(digits) == 6:
         return '{}-{}'.format(first_chars[2:6], first_chars[0:2])
 
-    date_from_sufix = extract_date_from_sufix(filename)
-    if date_from_sufix is not None:
-        return date_from_sufix
+    m = re.search('(enero|febrero|marzo|abril|mayo|junio|julio|agosto|setiembre|octubre|noviembre|diciembre)', filename)
+    if m:
+        month = month_from_name(m.group(1))
+        all_digits = ''.join(c for c in filename if c.isdigit())
+        year = all_digits if len(all_digits) == 4 else '2018'
+        return '{}-{}'.format(year, month)
 
-    return 'UNK'
+    return '-'
 
 
 def main():
@@ -38,7 +40,8 @@ def main():
     df = pd.DataFrame.from_dict({'file': files})
     df['city'] = df.file.apply(lambda f: extract_city(f))
     df['date'] = df.file.apply(lambda f: extract_date(f))
+    return df
 
 
 if __name__ == '__main__':
-    main()
+    df = main()
