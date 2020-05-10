@@ -1,3 +1,6 @@
 .idea/
 csvs/
 .DS_Store
+venv
+*.pyc
+.env
