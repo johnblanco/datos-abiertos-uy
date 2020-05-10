@@ -42,7 +42,11 @@ def files_summary(files):
         df = pd.read_csv(os.getcwd() + '/csvs/' + filename, encoding='latin1')
         total = len(df)
         d[filename] = {
-            'total': total
+            'total': total,
+            'sa_count': -1,#TODO
+            'mono_mides_count': -1,#TODO
+            'unipersonal_count': -1,#TODO
+            'sociedad_de_hecho_count': -1#TODO
         }
 
     return d
@@ -66,3 +70,4 @@ def clean_data():
 
 if __name__ == '__main__':
     df = clean_data()
+    df.to_csv('data.csv', index=False)
