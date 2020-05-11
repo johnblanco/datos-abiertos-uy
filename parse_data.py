@@ -3,6 +3,7 @@ import re
 
 import pandas as pd
 
+month_list = 'enero|febrero|marzo|abril|mayo|junio|julio|agosto|setiembre|octubre|noviembre|diciembre'.split("|")
 
 def extract_city(f):
     if 'montevideo' in f or 'mdeo' in f:
@@ -15,7 +16,6 @@ def extract_city(f):
 
 
 def month_from_name(name):
-    month_list = 'enero|febrero|marzo|abril|mayo|junio|julio|agosto|setiembre|octubre|noviembre|diciembre'.split("|")
     month = month_list.index(name) + 1
     return f'{month:02}'
 
@@ -57,6 +57,8 @@ def clean_data():
     df = pd.DataFrame.from_dict({'file': files})
     df['city'] = df.file.apply(lambda f: extract_city(f))
     df['date'] = df.file.apply(lambda f: extract_date(f))
+    df['year'] = df.date.apply(lambda d: d[0:4])
+    df['month'] = df.date.apply(lambda d: month_list[int(d[5:7])-1])
 
     file_summary = files_summary(files)
 
