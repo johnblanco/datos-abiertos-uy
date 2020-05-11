@@ -8,7 +8,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-df = pd.read_csv('data.csv').sort_values(by='date')
+df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(by='date')
+
 df_mvd_17 = df[(df.year == 2017) & (df.city == 'Montevideo')]
 df_salto_17 = df[(df.year == 2017) & (df.city == 'Salto')]
 
