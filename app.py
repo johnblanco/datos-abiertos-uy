@@ -15,10 +15,12 @@ app.layout = html.Div(children=[
     html.H1(children='Empresa en el Dia'),
 
     html.Div(children='''
-        Cantidad de empresas creadas, entre 2017 - 2019, a través del sistema de Empresa en el día, agrupado por departamento (Salto, Montevideo y Maldonado)
+        Cantidad de empresas creadas, entre 2017 - 2019, a través del sistema de Empresa en el día, agrupado por departamento (Salto, Montevideo y Maldonado).
     '''),
 
-    html.A('Link a Github', href='https://github.com/johnblanco/empresa_en_el_dia'),
+    html.Label("La gráfica muestra los totales de cada mes (unipersonales, SRL, SA, sociedades de hecho, monotributo MIDES)"),
+
+    html.Div(['El dataset es el provisto por Agesic en ', html.A('catalogodatos.gub.uy', href='https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia')]),
 
     dcc.RadioItems(
         id='year',
@@ -33,7 +35,11 @@ app.layout = html.Div(children=[
 
     dcc.Graph(
         id='graph'
-    )
+    ),
+
+    html.A('Link a Github', href='https://github.com/johnblanco/empresa_en_el_dia'),
+    html.Br(),
+    html.A('Tareas pendientes', href='https://github.com/johnblanco/empresa_en_el_dia/issues'),
 
 ])
 
@@ -59,7 +65,7 @@ def update_year(year):
              'type': 'bar', 'name': 'Maldonado'},
         ],
         'layout': {
-            'title': 'Creadas en {}'.format(year)
+            'title': 'Total de Creadas en {}'.format(year)
         }
     }
 
