@@ -2,7 +2,7 @@
 
 Estudio de los datos [provistos por Agesic](https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia)
 
-El plan es usar [dash](https://plotly.com/dash/) para visualizar los datos
+Utiliza [dash](https://plotly.com/dash/) para visualizar los datos
 
 ## Calidad de los datos
 
@@ -12,6 +12,11 @@ El plan es usar [dash](https://plotly.com/dash/) para visualizar los datos
 * Supongo que hay tipos de empresa que representan lo mismo como MS/MONO MIDES?, UNIPERSONALES/UNIPERSONAL, SOCIEDAD AN?NIMA/SA
 
 ## Descripción de los scripts
+
+
+### app.py
+
+Es la app dash, ahi se define el layout y los callbacks, todo en python.
 
 ### download_csvs.py
 
