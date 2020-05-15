@@ -12,11 +12,6 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
 
-#TODO procesar los datos para que no haya departamento / tipo de c/mes sin un valor, llenar con 0
-#TODO procesar los datos para que no haya departamento / tipo de c/mes sin un valor, llenar con 0
-#TODO procesar los datos para que no haya departamento / tipo de c/mes sin un valor, llenar con 0
-#TODO procesar los datos para que no haya departamento / tipo de c/mes sin un valor, llenar con 0
-
 app.layout = html.Div(children=[
     html.H1(children='Empresa en el Dia'),
 
@@ -100,7 +95,7 @@ app.layout = html.Div(children=[
      ]
 )
 def update_inputs_graph2(year2, city2, company_type):
-    df = pd.read_csv('data.csv').sort_values(
+    df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
         by='date')
     df.rename(columns={"srl_count": "SRL", "sa_count": "SA",
                        'mono_mides_count': 'Monotributo MIDES',
@@ -136,7 +131,7 @@ def bars_from_company_type(df, company_type):
     [Input('year', 'value')]
 )
 def update_year(year):
-    df = pd.read_csv('data.csv').sort_values(
+    df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
         by='date')
     df_mvd = df[(df.year == int(year)) & (df.city == 'Montevideo')]
     df_salto = df[(df.year == int(year)) & (df.city == 'Salto')]
