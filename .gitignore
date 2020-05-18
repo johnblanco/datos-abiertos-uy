@@ -4,3 +4,4 @@ csvs/
 venv
 *.pyc
 .env
+*.ipynb
