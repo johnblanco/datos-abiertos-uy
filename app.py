@@ -4,19 +4,20 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 import empresa
+import red_flags
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets,suppress_callback_exceptions=True)
 
 server = app.server
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Span('Menu: '),
-    dcc.Link('Empresa en el dia', href='/'),
+    dcc.Link('Desempeño en las Contrataciones Públicas', href='/'),
     html.Span(' | '),
-    dcc.Link('Banderas rojas organismos', href='/banderas-rojas'),
+    dcc.Link('Empresa en el dia', href='/empresa-en-el-dia'),
 
     html.Div(id='page-content')
 ])
@@ -26,11 +27,10 @@ app.layout = html.Div([
               [dash.dependencies.Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/':
-        return empresa.html_layout()
+        return red_flags.html_layout()
     else:
-        return html.Div([
-            html.H3('You are on page {}'.format(pathname))
-        ])
+        return empresa.html_layout()
+
 
 
 @app.callback(

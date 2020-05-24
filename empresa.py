@@ -1,11 +1,6 @@
-import dash
-import pandas as pd
-from dash.dependencies import Input, Output
-from plotly.graph_objs import Layout, Bar, Scatter
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-from dash.dependencies import Input, Output
 from plotly.graph_objs import Layout, Bar, Scatter
 
 
@@ -17,7 +12,7 @@ def html_layout():
             Cantidad de empresas creadas, entre 2017 - 2019, a través del sistema de Empresa en el día, agrupado por departamento (Salto, Montevideo y Maldonado).
         '''),
 
-        html.Div(['El dataset es el provisto por Agesic en ', html.A('catalogodatos.gub.uy',
+        html.Div(['Dataset es el provisto por Agesic en ', html.A('catalogodatos.gub.uy',
                                                                      href='https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia')]),
 
         html.H2('Totales por mes'),
