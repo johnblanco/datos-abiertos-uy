@@ -5,13 +5,13 @@ import pandas as pd
 from plotly.graph_objs import Layout, Bar, Scatter
 
 
-def worst_performers(df, names) -> list:
+def scores_by_year(df, names_to_filter) -> list:
     df_sorted = df.copy().sort_values(by='year')
 
     result = []
     x = ['en 2015', 'en 2016', 'en 2017', 'en 2018']
 
-    for name in names:
+    for name in names_to_filter:
         result.append({
             'x': x,
             'y': df_sorted[df_sorted.name == name].score.values,
@@ -29,6 +29,10 @@ def html_layout():
     top = df.groupby(by='name').sum()
     top.drop(columns='year', inplace=True)
     top = top.sort_values(by='score', ascending=False).head(7).reset_index()
+
+    df_table = top.copy()
+    df_table['score'] = df_table.score.apply(lambda x: round(x, 2))
+    df_table.columns = ['Organismo', 'Puntaje acumulado']
 
     return [
         html.H1('Desempeño en las Contrataciones Públicas'),
@@ -49,14 +53,14 @@ def html_layout():
 
         dash_table.DataTable(
             id='table',
-            columns=[{"name": i, "id": i} for i in top.columns],
-            data=top.to_dict('records'),
+            columns=[{"name": i, "id": i} for i in df_table.columns],
+            data=df_table.to_dict('records'),
         ),
 
         html.Strong('De los organismos de la tabla anterior, que puntaje sacaron cada año?'),
 
         dcc.Graph(figure={
-            'data': list(map(lambda d: Scatter(x=d['x'], y=d['y'], name=d['name']), worst_performers(df, top.name.unique()))),
+            'data': list(map(lambda d: Scatter(x=d['x'], y=d['y'], name=d['name']), scores_by_year(df, top.name.unique()))),
             'layout': {
                 'title': 'Puntaje acumulado 2015-2018 de los organismos con peor desempeño'
             }
