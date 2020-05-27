@@ -1,6 +1,13 @@
-# Creación de Empresas a través de Empresa en el Dia 
+# datos-abiertos-uy
 
-Estudio de los datos [provistos por Agesic](https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia)
+Es una aplicacion python + dash con visualizaciones interactivas de datos abiertos, actualmente estoy usando el dataset de [empresa en el dia](https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia) y el del indice de [desempeño](http://cuentasclaras.uy/#/buying-index) en las compras estatales
+
+[link del sitio en heroku](https://datos-abiertos-uy.herokuapp.com/)
+
+
+## Empresa en el dia
+
+Estudio de los datos [provistos por Agesic]()
 
 Utiliza [dash](https://plotly.com/dash/) para visualizar los datos
 
