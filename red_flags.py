@@ -33,6 +33,10 @@ def html_layout():
     df_table = top.copy()
     df_table['score'] = df_table.score.apply(lambda x: round(x, 2))
     df_table.columns = ['Organismo', 'Puntaje acumulado']
+    
+    pagination_config = {"page_action": "native",
+                        "page_current": 0,
+                        "page_size":2}
 
     return [
         html.H1('Desempeño en las Contrataciones Públicas'),
@@ -45,17 +49,20 @@ def html_layout():
         html.Div(['Este es un trabajo derivado del que hizo cívico y la diaria en ', html.A('cuentasclaras.uy',
                                                                                             href='http://cuentasclaras.uy/#/buying-index')]),
 
-        html.Div('Licencia: Creative Commons Attribution-ShareAlike 4.0 International License'),
-
-        html.Strong('[TODO >>>> agregar paginado de tabla]'),
+        html.Div('Licencia: Creative Commons Attribution-ShareAlike 4.0 International License'),       
 
         html.Div(html.Strong('Cuales son los organismos con peor puntaje acumulado?')),
 
         dash_table.DataTable(
             id='table',
             columns=[{"name": i, "id": i} for i in df_table.columns],
-            data=df_table.to_dict('records'),
+            data=df_table.to_dict('records'), 
+            page_action=pagination_config["page_action"],                      
+            page_current=pagination_config["page_current"],
+            page_size=pagination_config["page_size"],       
         ),
+
+        html.Br(), # Just breaking a line to show the pagination buttons properly
 
         html.Strong('De los organismos de la tabla anterior, que puntaje sacaron cada año?'),
 
