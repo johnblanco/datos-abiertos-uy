@@ -79,11 +79,8 @@ def html_layout():
 
 
 def load_df():
-    df = pd.read_csv('data.csv').sort_values(
+    df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
         by='date')
-
-    # df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
-    #     by='date')
 
     return df
 

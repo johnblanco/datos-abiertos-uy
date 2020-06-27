@@ -32,6 +32,8 @@ def display_page(pathname):
         return empresa.html_layout()
 
 
+# ---------------------empresa callbacks ---------------------
+
 @app.callback(
     Output('graph', 'figure'),
     [Input('year', 'value')]
@@ -50,6 +52,13 @@ def update_year(year):
 def update_inputs_by_type_graph(year2, city2, company_type):
     return empresa.update_inputs_by_type_graph(city2, company_type, year2)
 
+# ---------------------red flags callbacks ---------------------
+@app.callback(
+    Output('performance-graph', 'figure'),
+    [Input('performance-table', "page_current"),
+     Input('performance-table', "page_size")])
+def update_table(page_current,page_size):
+    return red_flags.page_changed(page_current, page_size)
 
 if __name__ == '__main__':
     app.run_server()
