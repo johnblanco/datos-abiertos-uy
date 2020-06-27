@@ -21,43 +21,9 @@ def month_from_name(name):
     return f'{month:02}'
 
 
-def missing_months_df():
-    missing = ['2017-01,Maldonado',
-               '2017-02,Maldonado',
-               '2017-03,Maldonado',
-               '2017-04,Maldonado',
-               '2017-05,Maldonado',
-               '2017-06,Maldonado',
-               '2017-07,Maldonado',
-               '2017-08,Maldonado',
-               '2017-09,Maldonado',
-               '2017-10,Maldonado',
-               '2017-11,Maldonado',
-               '2017-12,Maldonado',
-               '2018-01,Maldonado',
-               '2018-02,Maldonado',
-               '2018-03,Maldonado',
-               '2018-04,Maldonado',
-               '2018-05,Maldonado',
-               '2019-05,Montevideo',
-               '2019-07,Montevideo',
-               '2019-08,Montevideo',
-               '2019-09,Montevideo',
-               '2019-10,Montevideo',
-               '2019-05,Maldonado',
-               '2019-07,Maldonado',
-               '2019-08,Maldonado',
-               '2019-09,Maldonado',
-               '2019-10,Maldonado',
-               '2019-11,Maldonado',
-               '2019-12,Maldonado',
-               '2019-05,Salto',
-               '2019-07,Salto',
-               '2019-08,Salto',
-               '2019-09,Salto',
-               '2019-10,Salto',
-               '2019-11,Salto',
-               '2019-12,Salto']
+def missing_months_df(df, from_date, to_date):
+    cities = ['Montevideo','Salto', 'Maldonado']
+    missing = ['2019-03,Salto']
     rows = {}
     for a in missing:
         date = a.split(',')[0]
@@ -77,6 +43,14 @@ def missing_months_df():
 
 
 def extract_date(filename):
+    filename = filename.replace('-1.csv','.csv')
+    if 'inscripciones-de-empresas' in filename:
+        filename = filename.replace('.csv', '')
+        last_digits = filename[-6:]
+        month = last_digits[0:2]
+        year = last_digits[2:6]
+        return '{}-{}'.format(year, month)
+
     first_chars = filename[0:6]
     digits = ''.join(c for c in first_chars if c.isdigit())
     if len(digits) == 6:
@@ -93,19 +67,11 @@ def extract_date(filename):
 
 
 def load_file_details(filename):
-    df = pd.read_csv(os.getcwd() + '/csvs/' + filename, encoding='latin1')
-    if '-2019.csv' in filename:
-        df = pd.read_csv(os.getcwd() + '/csvs/' + filename, sep=';', encoding='latin1')
-
-    sa_count = 0
-    srl_count = 0
-    mono_mides_count = 0
-    unipersonal_count = 0
-    sociedad_de_hecho_count = 0
-
-    df = df.rename(columns={"Tipo ": "TIPO", "Tipo": "TIPO", "Nombre del proceso": "TIPO"})
+    df = read_csv_and_rename_columns(filename)
 
     col = "TIPO"
+
+    print(filename)
 
     sa_count = len(df[(df[col].str.contains('SA')) | (df[col].str.contains('SOCIEDAD AN'))])
     srl_count = len(df[(df[col].str.contains('SRL'))])
@@ -122,10 +88,10 @@ def load_file_details(filename):
     }
 
 
-def files_summary(files):
+def files_summary(files) -> dict:
     d = {}
     for filename in files:
-        df = pd.read_csv(os.getcwd() + '/csvs/' + filename, encoding='latin1')
+        df = pd.read_csv(os.getcwd() + '/csvs/empresa/' + filename, encoding='latin1')
         total = len(df)
         file_detail = load_file_details(filename)
         d[filename] = {
@@ -140,22 +106,62 @@ def files_summary(files):
     return d
 
 
+def parse_month(d):
+    return month_list[int(d[5:7]) - 1]
+
+
+def has_2_cities(filename):
+    return 'montevideo-y-salto' in filename
+
+
+def add_multiple_cities_files(multiple_city_files):
+
+    return None
+
+
 def clean_data():
-    files = os.listdir('./csvs/')
-    df = pd.DataFrame.from_dict({'file': files})
-    df['city'] = df.file.apply(lambda f: extract_city(f))
-    df['date'] = df.file.apply(lambda f: extract_date(f))
-    df['year'] = df.date.apply(lambda d: d[0:4])
-    df['month'] = df.date.apply(lambda d: month_list[int(d[5:7]) - 1])
+    path = './csvs/empresa'
+    all_files = os.listdir(path)
+    multiple_city_files = list(filter(lambda x: has_2_cities(x), all_files))#TODO incluir estos que filtre
+
+    files = list(filter(lambda filename: filename not in multiple_city_files, all_files))#TODO incluir estos que filtre
+
+
+    d = pd.DataFrame.from_dict({'file': files})
+    d['city'] = d.file.apply(lambda f: extract_city(f))
+    d['date'] = d.file.apply(lambda f: extract_date(f))
+    d['year'] = d.date.apply(lambda date: date[0:4])
+    d['month'] = d.date.apply(lambda date: parse_month(date))
 
     file_summary = files_summary(files)
 
     new_columns = ['srl_count', 'sa_count', 'mono_mides_count', 'unipersonal_count', 'sociedad_de_hecho_count', 'total']
     for col in new_columns:
-        df[col] = df.file.apply(lambda f: file_summary[f][col])
+        d[col] = d.file.apply(lambda f: file_summary[f][col])
 
-    df2 = missing_months_df()
-    return pd.concat([df, df2], sort=False)
+    d = add_multiple_cities_files(multiple_city_files)
+    df2 = missing_months_df(d, '2017-01', '2020-05')
+    return pd.concat([d, df2], sort=False)
+
+
+def read_csv_and_rename_columns(filename):
+    d = pd.read_csv(os.getcwd() + '/csvs/empresa/' + filename, encoding='latin1')
+    if len(d.columns) == 1:
+        d = pd.read_csv(os.getcwd() + '/csvs/empresa/' + filename, sep=';', encoding='latin1')
+
+    print('antes')
+    print(d.columns)
+    d = d.rename(
+        columns={"Tipo ": "TIPO",
+                 "Tipo": "TIPO",
+                 "Nombre del proceso": "TIPO",
+                 'Tipo de empresa': 'TIPO',
+                 'Tipo empresa': 'TIPO'})
+
+    print('despues')
+    print(d.columns)
+
+    return d
 
 
 if __name__ == '__main__':

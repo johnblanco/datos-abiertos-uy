@@ -28,9 +28,8 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname == '/':
         return red_flags.html_layout()
-    else:
+    if pathname == '/empresa-en-el-dia':
         return empresa.html_layout()
-
 
 
 @app.callback(

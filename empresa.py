@@ -9,11 +9,11 @@ def html_layout():
         html.H1(children='Empresa en el Dia'),
 
         html.Div(children='''
-            Cantidad de empresas creadas, entre 2017 - 2019, a través del sistema de Empresa en el día, agrupado por departamento (Salto, Montevideo y Maldonado).
+            Cantidad de empresas creadas, entre 2017 - 2020, a través del sistema de Empresa en el día, agrupado por departamento (Salto, Montevideo y Maldonado).
         '''),
 
         html.Div(['Dataset es el provisto por Agesic en ', html.A('catalogodatos.gub.uy',
-                                                                     href='https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia')]),
+                                                                  href='https://catalogodatos.gub.uy/dataset/agesic-creacion-de-empresas-a-traves-de-empresa-en-el-dia')]),
 
         html.H2('Totales por mes'),
 
@@ -78,9 +78,18 @@ def html_layout():
     ]
 
 
-def update_year(year):
-    df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
+def load_df():
+    df = pd.read_csv('data.csv').sort_values(
         by='date')
+
+    # df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
+    #     by='date')
+
+    return df
+
+
+def update_year(year):
+    df = load_df()
     df_mvd = df[(df.year == int(year)) & (df.city == 'Montevideo')]
     df_salto = df[(df.year == int(year)) & (df.city == 'Salto')]
     df_maldo = df[(df.year == int(year)) & (df.city == 'Maldonado')]
@@ -111,8 +120,7 @@ def bars_from_company_type(df, company_type):
 
 
 def update_inputs_by_type_graph(city2, company_type, year2):
-    df = pd.read_csv('https://raw.githubusercontent.com/johnblanco/empresa_en_el_dia/master/data.csv').sort_values(
-        by='date')
+    df = load_df()
     df.rename(columns={"srl_count": "SRL", "sa_count": "SA",
                        'mono_mides_count': 'Monotributo MIDES',
                        'sociedad_de_hecho_count': 'Sociedad de hecho',

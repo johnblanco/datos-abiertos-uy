@@ -21,9 +21,11 @@ def get_current_csv_urls():
 
 
 def download_csvs(urls):
+    system('rm -rf csvs/empresa')
+    system('mkdir csvs/empresa')
     for url in urls:
         system("wget {} --no-check-certificate".format(url))
-    system("mv *.csv csvs/")
+    system("mv *.csv csvs/empresa")
 
 
 if __name__ == '__main__':

@@ -28,6 +28,12 @@ class TestExtractDate(unittest.TestCase):
 
         self.assertEqual('2018-05', res)
 
+    def test_date_from_new_format(self):
+        res = parse_data.extract_date('inscripciones-de-empresas-montevideo_102019.csv')
+
+        self.assertEqual('2019-10', res)
+
+
 
 if __name__ == '__main__':
     unittest.main()
