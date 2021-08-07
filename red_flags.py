@@ -89,12 +89,6 @@ def html_layout():
 
         html.Div(html.Strong('Cuantas compras hicieron cada anio?')),
 
-        html.Strong('[TODO >>>> grafico de lineas con compras totales de c/u]'),
-
         html.Div(html.Strong('Detalle de atributos utilizados para el calculo del puntaje')),
-
-        html.Strong('[TODO >>>> un dropdown donde podes elegir el organismo'),
-
-        html.Strong('[TODO >>>> una tabla con columnas 2015,2016, etc, las filas son los diferentes atributos'),
 
     ]
